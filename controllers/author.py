@@ -48,7 +48,11 @@ async def get_authors_with_book_count():
     try:
         coll = get_collection("authors")
         pipeline = authors_with_book_count_pipeline()
-        results = list(coll.aggregate(pipeline))
-        return results
+        authors = []
+        for doc in coll.aggregate(pipeline):
+            doc["id"] = str(doc["_id"])
+            del doc["_id"]
+            authors.append(Author(**doc))
+        return authors
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al obtener estadísticas: {str(e)}")
