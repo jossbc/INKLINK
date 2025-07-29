@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from fastapi import Request
 from models.author import Author
 from utils.security import validateadmin
 from controllers.author import (
@@ -7,7 +8,9 @@ from controllers.author import (
     get_author_by_id,
 )
 from utils.security import validateadmin
-from controllers.author import get_authors_with_book_count
+from utils.mongodb import get_collection
+
+books_coll = get_collection("books")
 
 router = APIRouter(prefix="/authors", tags=["authors"])
 
@@ -17,12 +20,8 @@ async def endpoint_get_all_authors():
 
 @router.post("/", response_model=Author)
 @validateadmin
-async def endpoint_create_author(author: Author):
+async def endpoint_create_author(request: Request, author: Author):
     return await create_author(author)
-
-@router.get("/stats/books") 
-async def authors_book_count():
-    return await get_authors_with_book_count()
 
 @router.get("/{author_id}", response_model=Author)
 async def endpoint_get_author_by_id(author_id: str):

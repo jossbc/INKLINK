@@ -1,19 +1,13 @@
-def authors_with_book_count_pipeline():
+from bson import ObjectId
+
+def validate_author_exists_pipeline(author_id: str) -> list:
     return [
-        {
-            "$lookup": {
-                "from": "books",
-                "localField": "_id",
-                "foreignField": "author_id",
-                "as": "books"
-            }
-        },
-        {
-            "$project": {
-                "id": {"$toString": "$_id"},
-                "name": "$name",
-                "lastname": "$lastname",
-                "num_books": {"$size": "$books"}
-            }
-        }
+        {"$match": {
+            "_id": ObjectId(author_id)
+        }},
+        {"$project": {
+            "id": {"$toString": "$_id"},
+            "name": 1,
+            "lastname": 1
+        }}
     ]

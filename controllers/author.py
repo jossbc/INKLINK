@@ -3,11 +3,12 @@ from fastapi import HTTPException
 from models.author import Author
 from utils.mongodb import get_collection
 from bson import ObjectId
-from pipelines.author_pipeline import authors_with_book_count_pipeline
-
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+coll = get_collection("books")
+authors_coll = get_collection("authors")
 
 async def create_author(author: Author) -> Author:
     try:
@@ -43,16 +44,3 @@ async def get_author_by_id(author_id: str) -> Author:
     except Exception as e:
         logger.error(f"Error fetching author by id: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
-
-async def get_authors_with_book_count():
-    try:
-        coll = get_collection("authors")
-        pipeline = authors_with_book_count_pipeline()
-        authors = []
-        for doc in coll.aggregate(pipeline):
-            doc["id"] = str(doc["_id"])
-            del doc["_id"]
-            authors.append(Author(**doc))
-        return authors
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error al obtener estadísticas: {str(e)}")

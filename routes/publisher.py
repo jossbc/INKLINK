@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from fastapi import Request
 from models.publisher import Publisher
 from utils.security import validateadmin
 from controllers.publisher import (
@@ -16,7 +17,7 @@ async def endpoint_get_all_publishers():
 
 @router.post("/", response_model=Publisher)
 @validateadmin
-async def endpoint_create_publisher(publisher: Publisher):
+async def endpoint_create_publisher(request: Request, publisher: Publisher):
     return await create_publisher(publisher)
 
 @router.get("/{publisher_id}", response_model=Publisher)

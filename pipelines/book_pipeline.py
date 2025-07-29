@@ -1,5 +1,3 @@
-from bson import ObjectId
-
 def get_books_with_author_pipeline(skip: int = 0, limit: int = 10) -> list:
     return [
         {
@@ -17,6 +15,7 @@ def get_books_with_author_pipeline(skip: int = 0, limit: int = 10) -> list:
         },
         {"$unwind": "$author"},
         {"$project": {
+            "_id": 0,
             "id": {"$toString": "$_id"},
             "title": 1,
             "publication_year": 1,
@@ -30,6 +29,8 @@ def get_books_with_author_pipeline(skip: int = 0, limit: int = 10) -> list:
         {"$skip": skip},
         {"$limit": limit}
     ]
+
+
 def count_books_by_genre_pipeline():
     return [
         {"$group": {
@@ -41,16 +42,5 @@ def count_books_by_genre_pipeline():
             "genre": "$_id",
             "total_books": "$total",
             "_id": 0
-        }}
-    ]
-def validate_author_exists_pipeline(author_id: str) -> list:
-    return [
-        {"$match": {
-            "_id": ObjectId(author_id)
-        }},
-        {"$project": {
-            "id": {"$toString": "$_id"},
-            "name": 1,
-            "lastname": 1
         }}
     ]
