@@ -10,13 +10,13 @@ from controllers.book import (
     get_book_by_id,
     update_book,
     delete_book,
-    get_books_filtered
-    
+    get_books_filtered    
 )
 
 from pipelines.book_pipeline import (
     get_books_with_author_pipeline,
-    count_books_by_genre_pipeline
+    count_books_by_genre_pipeline,
+    count_books_by_year_pipeline
 )
 
 from utils.mongodb import get_collection
@@ -30,12 +30,12 @@ async def get_filtered_books(
     title: str = Query(default=None, description="Filtrar por titulo"),
     genre: str = Query(default=None, description="Filtrar por genero"),
     skip: int = Query(default=0, ge=0, description="Numero de libros a omitir"),
-    limit: int = Query(default=10, ge=1, le=100, description="Número de libros a retornar")
+    limit: int = Query(default=10, ge=1, le=100, description="Número de libros a retonar")
 ):
     books = await get_books_filtered(title, genre, skip, limit)
     return books
 
-@router.get("/books dets.")
+@router.get("/details")
 async def get_books_with_authors(skip: int = 0, limit: int = 10):
     pipeline = get_books_with_author_pipeline(skip, limit)
     books = list(books_coll.aggregate(pipeline))
@@ -46,6 +46,12 @@ async def count_books_by_genre():
     pipeline = count_books_by_genre_pipeline()
     stats = list(books_coll.aggregate(pipeline))
     return stats
+
+@router.get("/stats/years")
+async def endpoint_books_by_year():
+        pipeline = count_books_by_year_pipeline()
+        stats = list(books_coll.aggregate(pipeline))
+        return stats
 
 @router.post("/", response_model=Book)
 @validateadmin

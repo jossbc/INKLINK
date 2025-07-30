@@ -30,7 +30,6 @@ def get_books_with_author_pipeline(skip: int = 0, limit: int = 10) -> list:
         {"$limit": limit}
     ]
 
-
 def count_books_by_genre_pipeline():
     return [
         {"$group": {
@@ -43,4 +42,24 @@ def count_books_by_genre_pipeline():
             "total_books": "$total",
             "_id": 0
         }}
+    ]
+
+def count_books_by_year_pipeline():
+    return [
+        {
+            "$group": {
+                "_id": "$publication_year",
+                "books": { "$sum": 1 }
+            }
+        },
+        {
+            "$project": {
+                "books": 1,
+                "year": "$_id",
+                "_id": 0
+            }
+        },
+        {
+            "$sort": { "year": 1 }
+        }
     ]

@@ -23,6 +23,10 @@ app = FastAPI(title="InkLink API", version="1.0")
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+@app.get("/")
+def read_root():
+    return {"version": "0.0.0"}
+
 app.include_router(user_router)
 app.include_router(login_router)
 app.include_router(authors_router)
