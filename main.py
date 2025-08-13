@@ -12,12 +12,6 @@ from routes.login import router as login_router
 from dotenv import load_dotenv
 load_dotenv()
 
-import firebase_admin
-from firebase_admin import credentials
-
-cred = credentials.Certificate("secrets/inklink-firebase-adminsdk.json")
-firebase_admin.initialize_app(cred)
-
 app = FastAPI(title="InkLink API", version="1.0")
 
 logging.basicConfig(level=logging.INFO)
