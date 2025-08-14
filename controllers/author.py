@@ -51,7 +51,7 @@ async def delete_author(author_id: str):
         if not author:
             raise HTTPException(status_code=404, detail="Autor no encontrado")
 
-        books_with_author = books_coll.count_documents({"author_id": author_obj_id})
+        books_with_author = books_coll.count_documents({"author_id": str(author_obj_id)})
         if books_with_author > 0:
             raise HTTPException(
                 status_code=400,
@@ -59,6 +59,7 @@ async def delete_author(author_id: str):
             )
 
         authors_coll.delete_one({"_id": author_obj_id})
+
         return {"message": "Autor eliminado correctamente"}
 
     except HTTPException:
