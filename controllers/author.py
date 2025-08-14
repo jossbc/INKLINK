@@ -42,20 +42,23 @@ async def get_author_by_id(author_id: str) -> Author:
         logger.error(f"Error fetching author by id: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
+
 async def delete_author(author_id: str):
     try:
-        author = authors_coll.find_one({"_id": ObjectId(author_id)})
+        author_obj_id = ObjectId(author_id) 
+
+        author = authors_coll.find_one({"_id": author_obj_id})
         if not author:
             raise HTTPException(status_code=404, detail="Autor no encontrado")
 
-        books_with_author = books_coll.count_documents({"author_id": author_id})
+        books_with_author = books_coll.count_documents({"author_id": author_obj_id})
         if books_with_author > 0:
             raise HTTPException(
                 status_code=400,
                 detail="No se puede eliminar un autor con libros asociados"
             )
 
-        authors_coll.delete_one({"_id": ObjectId(author_id)})
+        authors_coll.delete_one({"_id": author_obj_id})
         return {"message": "Autor eliminado correctamente"}
 
     except HTTPException:
@@ -63,3 +66,4 @@ async def delete_author(author_id: str):
     except Exception as e:
         logger.error(f"Error deleting author: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+
