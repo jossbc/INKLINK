@@ -68,4 +68,15 @@ async def delete_author(author_id: str):
         logger.error(f"Error deleting author: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
-
+async def update_author(author_id: str, author: Author) -> Author:
+    author_obj_id = ObjectId(author_id)
+    existing = authors_coll.find_one({"_id": author_obj_id})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Autor no encontrado")
+    
+    update_data = author.model_dump(exclude={"id"})
+    authors_coll.update_one({"_id": author_obj_id}, {"$set": update_data})
+    
+    updated = authors_coll.find_one({"_id": author_obj_id})
+    updated["id"] = str(updated["_id"])
+    return Author(**updated)

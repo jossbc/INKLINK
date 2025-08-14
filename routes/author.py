@@ -7,6 +7,7 @@ from controllers.author import (
     get_all_authors,
     get_author_by_id,
     delete_author,
+    update_author,
 )
 from utils.mongodb import get_collection
 
@@ -31,3 +32,8 @@ async def endpoint_get_author_by_id(author_id: str):
 @validateadmin
 async def endpoint_delete_author(request: Request, author_id: str):
     return await delete_author(author_id)
+
+@router.put("/{author_id}", response_model=Author)
+@validateadmin
+async def endpoint_update_author(request: Request, author_id: str, author: Author):
+    return await update_author(author_id, author)
