@@ -45,7 +45,7 @@ async def get_author_by_id(author_id: str) -> Author:
 
 async def delete_author(author_id: str):
     try:
-        author_obj_id = ObjectId(author_id) 
+        author_obj_id = ObjectId(author_id)
 
         author = authors_coll.find_one({"_id": author_obj_id})
         if not author:
@@ -66,4 +66,5 @@ async def delete_author(author_id: str):
     except Exception as e:
         logger.error(f"Error deleting author: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+
 
