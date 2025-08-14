@@ -14,11 +14,11 @@ books_coll = get_collection("books")
 
 router = APIRouter(prefix="/authors", tags=["authors"])
 
-@router.get("/", response_model=list[Author])
+@router.get("", response_model=list[Author])
 async def endpoint_get_all_authors():
     return await get_all_authors()
 
-@router.post("/", response_model=Author)
+@router.post("", response_model=Author)
 @validateadmin
 async def endpoint_create_author(request: Request, author: Author):
     return await create_author(author)
