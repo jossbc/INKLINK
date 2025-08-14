@@ -6,8 +6,8 @@ from controllers.author import (
     create_author,
     get_all_authors,
     get_author_by_id,
+    delete_author,
 )
-from utils.security import validateadmin
 from utils.mongodb import get_collection
 
 books_coll = get_collection("books")
@@ -26,3 +26,8 @@ async def endpoint_create_author(request: Request, author: Author):
 @router.get("/{author_id}", response_model=Author)
 async def endpoint_get_author_by_id(author_id: str):
     return await get_author_by_id(author_id)
+
+@router.delete("/{author_id}")
+@validateadmin
+async def endpoint_delete_author(author_id: str):
+    return await delete_author(author_id)
