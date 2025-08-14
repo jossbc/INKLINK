@@ -29,5 +29,5 @@ async def endpoint_get_author_by_id(author_id: str):
 
 @router.delete("/{author_id}")
 @validateadmin
-async def endpoint_delete_author(author_id: str):
+async def endpoint_delete_author(request: Request, author_id: str):
     return await delete_author(author_id)
