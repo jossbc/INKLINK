@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 @app.get("/")
 def read_root():
-    return {"version": "0.0.0"}
+    return {"status": "healthy", "version": "0.0.0", "service": "dulceria-api"}
 
 @app.get("/health")
 def health_check():
