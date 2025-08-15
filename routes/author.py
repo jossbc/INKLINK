@@ -16,7 +16,6 @@ books_coll = get_collection("books")
 router = APIRouter(prefix="/authors", tags=["authors"])
 
 @router.get("", response_model=list[Author])
-@validateuser
 async def endpoint_get_all_authors():
     return await get_all_authors()
 

@@ -59,7 +59,6 @@ async def create_book_route(request:Request,  book: Book):
     return await create_book(book)
 
 @router.get("", response_model=list[Book])
-@validateuser
 async def get_books_route():
     return await get_all_books()
 
