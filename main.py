@@ -6,8 +6,9 @@ from fastapi import FastAPI
 from routes.book import router as books_router
 from routes.author import router as authors_router
 from routes.publisher import router as publisher_router
-from routes.user import router as user_router
-from routes.login import router as login_router
+from controllers.users import create_user, login
+from models.login import Login
+from models.users import User
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -29,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 @app.get("/")
 def read_root():
-    return {"status": "healthy", "version": "0.0.0", "service": "dulceria-api"}
+    return {"status": "healthy", "version": "0.0.0", "service": "inklink-api"}
 
 @app.get("/health")
 def health_check():
@@ -55,9 +56,15 @@ def readiness_check():
         }
     except Exception as e:
         return {"status": "not_ready", "error": str(e)}
+    
+@app.post("/users")
+async def create_user_endpoint(user: User) -> User:
+    return await create_user(user)
 
-app.include_router(user_router)
-app.include_router(login_router)
+@app.post("/login")
+async def login_access(l: Login) -> dict:
+    return await login(l)
+
 app.include_router(authors_router)
 app.include_router(publisher_router)
 app.include_router(books_router)
