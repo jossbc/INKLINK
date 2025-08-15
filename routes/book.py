@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Query
 from fastapi import Request
 from models.book import Book
-from utils.security import validateadmin
+from utils.security import validateuser
 from bson import json_util
 import json
 from controllers.book import (
@@ -54,11 +54,12 @@ async def endpoint_books_by_year():
         return stats
 
 @router.post("", response_model=Book)
-@validateadmin
+@validateuser
 async def create_book_route(request:Request,  book: Book):
     return await create_book(book)
 
 @router.get("", response_model=list[Book])
+@validateuser
 async def get_books_route():
     return await get_all_books()
 
@@ -67,11 +68,11 @@ async def get_book_by_id_route(book_id: str):
     return await get_book_by_id(book_id)
 
 @router.put("/{book_id}", response_model=Book)
-@validateadmin
+@validateuser
 async def update_book_route(request: Request, book_id: str, book: Book):
     return await update_book(book_id, book)
 
 @router.delete("/{book_id}")
-@validateadmin
+@validateuser
 async def delete_book_route(request: Request, book_id: str):
     return await delete_book(book_id)
